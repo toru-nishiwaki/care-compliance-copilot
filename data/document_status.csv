@@ -1,0 +1,11 @@
+﻿document_id,user_id,document_type,required,file_exists,valid_from,valid_to,approved,approved_by
+D001,U001,訪問介護計画書,True,True,2026-06-01,2026-11-30,True,管理者A
+D002,U001,モニタリング記録,True,True,2026-06-01,2026-06-30,True,サ責A
+D003,U002,訪問介護計画書,True,True,2026-04-01,2026-09-30,True,管理者A
+D004,U002,モニタリング記録,True,True,2026-05-01,2026-05-31,True,サ責A
+D005,U003,訪問介護計画書,True,True,2026-03-01,2026-08-31,True,管理者B
+D006,U003,モニタリング記録,True,True,2026-06-01,2026-06-30,True,サ責B
+D007,U004,訪問介護計画書,True,True,2026-05-01,2026-10-31,True,管理者A
+D008,U004,モニタリング記録,True,True,2026-06-01,2026-06-30,True,サ責A
+D009,U005,訪問介護計画書,True,True,2026-01-01,2026-06-30,True,管理者B
+D010,U005,モニタリング記録,True,True,2026-06-01,2026-06-30,False,
