@@ -1,0 +1,6 @@
+﻿user_id,user_name,service_type,care_level,start_date,status
+U001,利用者A,訪問介護,要介護2,2026-04-01,active
+U002,利用者B,訪問介護,要介護3,2026-03-15,active
+U003,利用者C,訪問介護,要介護2,2026-05-01,active
+U004,利用者D,訪問介護,要介護4,2026-02-10,active
+U005,利用者E,訪問介護,要介護1,2026-05-20,active

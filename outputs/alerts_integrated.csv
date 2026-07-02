@@ -1,0 +1,18 @@
+﻿user_id,alert_category,alert_type,severity,document_type,target_type,target_id,detail,action_type,human_review_required
+U001,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R001,特記事項が100文字未満です。現在の文字数: 69文字,generate_note_draft,True
+U001,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R002,特記事項が100文字未満です。現在の文字数: 56文字,generate_note_draft,True
+U001,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R003,特記事項が100文字未満です。現在の文字数: 52文字,generate_note_draft,True
+U002,document,当月モニタリング未確認,high,モニタリング記録,monitoring,D004,2026年6月分のモニタリング記録が確認できません。,generate_monitoring_draft,True
+U002,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R004,特記事項が100文字未満です。現在の文字数: 54文字,generate_note_draft,True
+U002,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R005,特記事項が100文字未満です。現在の文字数: 49文字,generate_note_draft,True
+U003,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R006,特記事項が100文字未満です。現在の文字数: 59文字,generate_note_draft,True
+U003,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R007,特記事項が100文字未満です。現在の文字数: 51文字,generate_note_draft,True
+U003,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R008,特記事項が100文字未満です。現在の文字数: 56文字,generate_note_draft,True
+U004,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R009,特記事項が100文字未満です。現在の文字数: 56文字,generate_note_draft,True
+U004,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R010,特記事項が100文字未満です。現在の文字数: 52文字,generate_note_draft,True
+U004,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R011,特記事項が100文字未満です。現在の文字数: 54文字,generate_note_draft,True
+U004,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R012,特記事項が100文字未満です。現在の文字数: 56文字,generate_note_draft,True
+U005,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R013,特記事項が100文字未満です。現在の文字数: 5文字,generate_note_draft,True
+U005,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R014,特記事項が100文字未満です。現在の文字数: 6文字,generate_note_draft,True
+U005,daily_record,特記事項不足,medium,日々の介護記録,daily_record,R015,特記事項が100文字未満です。現在の文字数: 5文字,generate_note_draft,True
+U005,document,未承認,medium,モニタリング記録,document,D010,書類は存在しますが、担当者による承認が完了していません。,review_document,True
