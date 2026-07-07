@@ -134,7 +134,7 @@ data/
 
 ### **出力データ**
 
-Notebook実行後、以下のCSVが生成されます。
+Notebook実行後、または `app.py`（Streamlit版）の操作後に、`outputs/` 以下に以下のCSVが生成されます。
 
 | ファイル名 | 内容 |
 | ----- | ----- |
@@ -145,6 +145,8 @@ Notebook実行後、以下のCSVが生成されます。
 | `monitoring_records_with_ai_draft.csv` | 月間モニタリングAI下書き入り記録 |
 | `monitoring_records_reviewed.csv` | 職員確認済みのモニタリング記録 |
 
+`outputs/` は実行のたびに内容が更新・追記される作業ディレクトリのため、Git管理からは除外しています（`outputs/.gitkeep` のみ追跡）。出力イメージを確認したい場合は、固定サンプルを置いた `sample_outputs/` を参照してください。
+
 ## 
 
 ## 
@@ -153,6 +155,8 @@ Notebook実行後、以下のCSVが生成されます。
 
 care-compliance-copilot/  
 ├── README.md  
+├── app.py（Streamlit版アプリ）  
+├── requirements.txt  
 ├── notebook/  
 │   └── care\_compliance\_copilot\_mvp.ipynb  
 ├── data/  
@@ -161,7 +165,8 @@ care-compliance-copilot/
 │   ├── daily\_records.csv  
 │   ├── monitoring\_records.csv  
 │   └── document\_status.csv  
-├── outputs/  
+├── outputs/（実行時生成物。Git管理対象外、.gitkeepのみ追跡）  
+├── sample\_outputs/（GitHub公開用の固定サンプル出力）  
 │   ├── alerts\_integrated.csv  
 │   ├── alert\_summary\_by\_user.csv  
 │   ├── daily\_records\_with\_ai\_note\_draft.csv  
@@ -172,6 +177,27 @@ care-compliance-copilot/
     └── screenshots/
 
 ## **実行方法**
+
+### **Streamlitアプリ（app.py）**
+
+ロジック検証済みのStreamlit版アプリをローカルで起動できます。
+
+```
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+起動後、サイドバーのメニューから以下を確認できます。
+
+* 概要  
+* データ確認（入力CSVの中身を表示）  
+* アラート一覧（統合アラート・利用者別集計）  
+* AI下書き確認（特記事項補填案・月間モニタリング下書きのプレビュー）  
+* 職員確認済み保存（AI下書きを確認・修正し `outputs/` に保存）
+
+`outputs/` はアプリ実行のたびに更新される作業ディレクトリです。出力イメージのみ確認したい場合は `sample_outputs/` を参照してください。
+
+### **Notebook（検証用ロジック）**
 
 Google Colabで以下のNotebookを開きます。
 
@@ -237,30 +263,28 @@ AI下書き生成では、日々の記録やケアプランに存在する情報
 
 ## **今後の拡張案**
 
-今後は、Colabで検証したロジックをStreamlitに移植し、簡易Webアプリとして操作できる形にする予定です。
+Colabで検証したロジックは、`app.py` としてStreamlitに移植済みです。現状のStreamlit版では以下を操作できます。
 
-想定しているStreamlit版の機能は以下です。
+* 概要表示  
+* 入力CSVのデータ確認  
+* 統合アラート・利用者別アラート集計の確認  
+* 特記事項補填案・月間モニタリング下書きのプレビュー  
+* 職員確認済みとしての保存（確認者・確認日時の記録）
 
-* ダッシュボード表示  
-* 利用者別アラート一覧  
-* 状態別の書類名表示  
+今後の拡張候補としては、以下を想定しています。
+
 * アラートクリックによる対象書類・対象記録の詳細表示  
-* 日々の介護記録の確認不足チェック  
-* 特記事項補填案のAI下書き候補生成  
-* 月間モニタリング下書き候補生成  
-* 職員確認済み保存  
-* 確認者・確認日時の記録
-
-Streamlit版では、採用担当者や利用者が画面上で業務フローを確認できるようにし、Notebookで検証したロジックを「触れるデモ」として提示することを目指します。
+* 同一record\_id / monitoring\_idの重複チェックまたは上書き保存  
+* ダッシュボード形式でのアラート可視化
 
 ## **使用技術**
 
 * Python  
 * pandas  
+* Streamlit  
 * Google Colab  
 * CSV  
-* 生成AIプロンプト設計  
-* Streamlit（今後実装予定）
+* 生成AIプロンプト設計
 
 ## **位置づけ**
 

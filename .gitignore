@@ -1,1 +1,5 @@
 .DS_Store
+
+# 実行時生成物（app.py / notebook実行で生成されるCSVなど）
+outputs/*
+!outputs/.gitkeep
