@@ -1,3 +1,1 @@
 ﻿alert_key,queue_type,record_type,target_id,user_id,document_name,detail,reviewed_text,review_status,reviewed_by,reviewed_at
-document|D010|U005|モニタリング記録|未承認,document,document,D010,U005,モニタリング記録,書類は存在しますが、承認が完了していません。職員確認が必要です。,,confirmed,サ責A,2026-07-01 10:00:00
-document|D016|職員B|研修記録|署名なし,document,document,D016,職員B,研修記録,承認済みですが、承認者が記録されていません。職員確認が必要です。,,confirmed,管理者A,2026-07-02 09:30:00
