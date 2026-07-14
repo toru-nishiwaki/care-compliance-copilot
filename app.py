@@ -5,6 +5,7 @@ import re
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 
 # =========================
@@ -15,6 +16,213 @@ st.set_page_config(
     page_title="Care Compliance Copilot",
     page_icon="✅",
     layout="wide",
+)
+
+# 見た目のみを整えるCSS（配色は.streamlit/config.tomlのテーマ設定と合わせた落ち着いた業務アプリ風）。
+# ロジック・ウィジェットのkeyには一切影響しない表示専用のスタイル調整。
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1200px;
+    }
+
+    h1, h2, h3 {
+        color: #1f2d3d;
+    }
+
+    h1 {
+        border-bottom: 2px solid #eef2f8;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    [data-testid="stSidebar"] {
+        border-right: 1px solid #dde3ea;
+    }
+
+    [data-testid="stMetric"] {
+        background-color: #ffffff;
+        border: 1px solid #dde3ea;
+        border-radius: 10px;
+        padding: 0.9rem 1rem 0.7rem 1rem;
+    }
+
+    [data-testid="stMetricLabel"] {
+        color: #5a6472;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 12px !important;
+    }
+
+    div[data-testid="stButton"] > button[kind="primary"] {
+        background-color: #2b4c7e;
+        border-color: #2b4c7e;
+    }
+
+    div[data-testid="stButton"] > button[kind="primary"]:hover {
+        background-color: #1f3b63;
+        border-color: #1f3b63;
+    }
+
+    .demo-card-badge {
+        display: inline-block;
+        background-color: #2b4c7e;
+        color: #ffffff;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        padding: 2px 9px;
+        border-radius: 4px;
+        margin-bottom: 0.6rem;
+    }
+
+    .demo-card-title {
+        font-size: 1.08em;
+        font-weight: 700;
+        color: #1f2d3d;
+        margin: 0.1rem 0 0.5rem 0;
+    }
+
+    .demo-card-meta {
+        font-size: 0.92em;
+        color: #3d4a59;
+        margin-bottom: 0.2rem;
+    }
+
+    .demo-feature-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0.5rem 0 0.7rem 0;
+    }
+
+    .demo-feature-chip {
+        display: inline-block;
+        background-color: #eef2f8;
+        color: #2b4c7e;
+        font-size: 0.78em;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+        border: 1px solid #dbe4f0;
+    }
+
+    .hero-card {
+        background-color: #f4f6f9;
+        border: 1px solid #dde3ea;
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .hero-eyebrow {
+        display: inline-block;
+        font-size: 0.75em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #2b4c7e;
+        background-color: #e3e9f3;
+        padding: 2px 10px;
+        border-radius: 4px;
+        margin-bottom: 0.6rem;
+    }
+
+    .hero-title {
+        font-size: 1.6em;
+        font-weight: 700;
+        color: #1f2d3d;
+        margin-bottom: 0.3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1em;
+        color: #3d4a59;
+        margin-bottom: 0.9rem;
+    }
+
+    .hero-point-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+    }
+
+    .hero-point {
+        display: inline-block;
+        background-color: #ffffff;
+        border: 1px solid #dde3ea;
+        color: #1f2d3d;
+        font-size: 0.85em;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 8px;
+    }
+
+    .kpi-flag {
+        display: inline-block;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-bottom: 0.4rem;
+    }
+
+    .kpi-flag-info { background-color: #eef2f8; color: #2b4c7e; }
+    .kpi-flag-warn { background-color: #fff8e1; color: #8a6d00; }
+    .kpi-flag-risk { background-color: #fdecea; color: #c0392b; }
+    .kpi-flag-ok { background-color: #e6f4ea; color: #1e7e34; }
+
+    .kpi-card {
+        background-color: #ffffff;
+        border: 1px solid #dde3ea;
+        border-radius: 10px;
+        padding: 0.9rem 1rem 0.85rem 1rem;
+        min-height: 176px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kpi-card-value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #1f2d3d;
+        line-height: 1.15;
+        margin: 0.15rem 0 0.1rem 0;
+    }
+
+    .kpi-card-label {
+        font-size: 0.85em;
+        font-weight: 600;
+        color: #3d4a59;
+        margin-bottom: 0.35rem;
+    }
+
+    .kpi-card-caption {
+        font-size: 0.78em;
+        color: #5a6472;
+        line-height: 1.4;
+        margin-top: auto;
+    }
+
+    [data-testid="stMetricValue"] {
+        font-size: 1.9rem;
+        font-weight: 700;
+    }
+
+    [data-testid="stMetric"] [data-testid="stCaptionContainer"] {
+        font-size: 0.8em;
+    }
+
+    hr {
+        margin: 1.1rem 0;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -83,6 +291,9 @@ STATUS_BADGE_STYLES = {
     "AI補填": "background:#e8f0fe;color:#1a56cc;",
     "下書き": "background:#e8f0fe;color:#1a56cc;",
     "職員確認が必要": "background:#fff8e1;color:#8a6d00;",
+    "高リスク": "background:#fdecea;color:#c0392b;",
+    "高リスク未対応": "background:#fdecea;color:#c0392b;",
+    "AI下書きあり": "background:#e8f0fe;color:#1a56cc;",
 }
 
 QUEUE_LOG_PATH = OUTPUTS_DIR / "confirmation_queue_log.csv"
@@ -465,7 +676,76 @@ def status_badge_html(label: str) -> str:
     style = STATUS_BADGE_STYLES.get(label, "background:#f1f1f1;color:#333333;")
     return (
         f'<span style="display:inline-block;padding:2px 10px;border-radius:10px;'
-        f'font-size:0.85em;{style}">{label}</span>'
+        f'font-size:0.85em;font-weight:600;{style}">{label}</span>'
+    )
+
+
+def render_page_top_anchor() -> None:
+    """ページ最上部の目印となる、表示上は見えないアンカー要素を配置する。"""
+    st.markdown('<div id="page-top-anchor"></div>', unsafe_allow_html=True)
+
+
+def scroll_to_top() -> None:
+    """画面を最上部までスクロールする（表示専用）。
+
+    ページ遷移・状態遷移の直後に1回だけ呼び出す想定。呼び出し側は
+    st.session_state["scroll_to_top"]フラグをpopしてから呼ぶことで、
+    通常操作の再描画では発火しないようにする。Streamlitの再描画が
+    このスクリプト実行より後にずれ込む場合があるため、複数タイミングで
+    再試行する。
+    """
+    components.html(
+        """
+        <script>
+        function scrollParentToTop() {
+            const doc = window.parent.document;
+
+            const anchor = doc.getElementById("page-top-anchor");
+            if (anchor) {
+                anchor.scrollIntoView({ behavior: "auto", block: "start" });
+            }
+
+            const selectors = [
+                "section.main",
+                "[data-testid='stAppViewContainer']",
+                "[data-testid='stMain']",
+                ".main",
+            ];
+
+            selectors.forEach((selector) => {
+                const el = doc.querySelector(selector);
+                if (el) {
+                    el.scrollTop = 0;
+                }
+            });
+
+            window.parent.scrollTo(0, 0);
+        }
+
+        scrollParentToTop();
+        setTimeout(scrollParentToTop, 50);
+        setTimeout(scrollParentToTop, 150);
+        setTimeout(scrollParentToTop, 350);
+        </script>
+        """,
+        height=0,
+    )
+
+
+def render_kpi_card(flag_label: str, flag_class: str, value, label: str, caption: str) -> None:
+    """概要ダッシュボード上部のKPIカードを、高さ・上端位置を揃えた1枚のHTMLカードとして表示する。
+
+    st.metric単体では、カード外に置いたバッジの有無でカードごとに高さがずれるため、
+    バッジ・数値・ラベル・説明文をすべて1つのHTMLブロックに収めて表示専用で統一する。
+    """
+    st.markdown(
+        f'<div class="kpi-card">'
+        f'<span class="kpi-flag {flag_class}">{flag_label}</span>'
+        f'<div class="kpi-card-value">{value}</div>'
+        f'<div class="kpi-card-label">{label}</div>'
+        f'<div class="kpi-card-caption">{caption}</div>'
+        f"</div>",
+        unsafe_allow_html=True,
     )
 
 
@@ -1588,6 +1868,7 @@ def render_demo_edit_form(record_row) -> bool:
 
     if st.button("← 全体図に戻る（修正せず終了）", key="demo_edit_cancel"):
         st.session_state["demo_edit_mode"] = False
+        st.session_state["scroll_to_top"] = True
         st.rerun()
 
     confirmed_state = st.session_state.get(DEMO_CONFIRMED_RECORD_KEY)
@@ -1664,6 +1945,7 @@ def render_demo_edit_form(record_row) -> bool:
             }
 
             st.session_state["demo_edit_mode"] = False
+            st.session_state["scroll_to_top"] = True
             st.success("修正版として保存しました。確認履歴・監査ログに修正履歴が追加されます。")
             saved = True
 
@@ -1763,13 +2045,17 @@ def render_demo_service_record(related_rows: pd.DataFrame) -> bool:
             st.session_state["demo_ai_flagged_fields_actual"] = flagged_actual
             st.session_state["demo_ai_final_note_body"] = build_fallback_ai_note_body(record_row)
             st.session_state[preview_key] = True
+            st.session_state["scroll_to_top"] = True
             st.rerun()
 
     else:
         # --- After：AI補填後の完成案を確認する画面（レ点チェックは読み取り専用） ---
+        # 画面最上部へのスクロールは、スクリプト先頭の共通処理（page確定直後）でまとめて行う。
+
         if st.button("← 元の記録画面に戻って修正する", key="demo_back_to_before"):
             # previewフラグだけを解除する。Beforeのcheckbox状態（demo_before_check_*）は保持したままにする。
             st.session_state[preview_key] = False
+            st.session_state["scroll_to_top"] = True
             st.rerun()
 
         st.subheader("AI補填後のサービス提供記録（完成案）")
@@ -1892,6 +2178,7 @@ def render_demo_service_record(related_rows: pd.DataFrame) -> bool:
 def _apply_nav_page(target_page: str) -> None:
     """指定ページを主要導線／補助画面いずれかのradioに反映し、もう一方は選択解除する。"""
     st.session_state.nav_page = target_page
+    st.session_state["scroll_to_top"] = True
     if target_page in PRIMARY_MENU_ITEMS:
         st.session_state["nav_primary_radio"] = target_page
         st.session_state["nav_secondary_radio"] = None
@@ -1905,6 +2192,7 @@ def _on_primary_nav_change() -> None:
     if selected is not None:
         st.session_state.nav_page = selected
         st.session_state["nav_secondary_radio"] = None
+        st.session_state["scroll_to_top"] = True
 
 
 def _on_secondary_nav_change() -> None:
@@ -1912,6 +2200,7 @@ def _on_secondary_nav_change() -> None:
     if selected is not None:
         st.session_state.nav_page = selected
         st.session_state["nav_primary_radio"] = None
+        st.session_state["scroll_to_top"] = True
 
 
 if "nav_page" not in st.session_state:
@@ -1921,7 +2210,8 @@ if "_pending_nav_page" in st.session_state:
     _apply_nav_page(st.session_state.pop("_pending_nav_page"))
 
 st.sidebar.title("Care Compliance Copilot")
-st.sidebar.caption("訪問介護向けコンプライアンス確認支援MVP")
+st.sidebar.caption("訪問介護事業所の運営指導前チェックを支援するAI活用MVP")
+st.sidebar.info("👉 まずは「書類アラート一覧」最上部のR011デモから操作するのがおすすめです。")
 
 st.sidebar.markdown("### メニューの主要導線")
 st.sidebar.caption("書類アラート一覧→書類詳細・AI補填プレビュー→確認キュー→確認履歴・監査ログの一本道フローです。")
@@ -1947,6 +2237,13 @@ st.sidebar.radio(
 
 page = st.session_state.nav_page
 
+render_page_top_anchor()
+
+if st.session_state.pop("scroll_to_top", False):
+    # ページ遷移・状態遷移の直後だけ、画面最上部へスクロールする。
+    # 通常操作（チェック・入力など）による再描画では発火しない。
+    scroll_to_top()
+
 
 # =========================
 # 画面：使い方・業務フロー
@@ -1954,16 +2251,21 @@ page = st.session_state.nav_page
 
 if page == "使い方・業務フロー":
     st.title("使い方・業務フロー")
-    st.write(
-        "訪問介護事業所の運営指導前チェックにおいて、"
-        "書類不備・未確認・未承認の記録を検出し、"
-        "必要に応じてAI下書き候補を提示するコンプライアンス確認支援MVPです。"
-    )
-
-    st.info(
-        "AIやルールは記録・書類・レ点チェックを確定しません。"
-        "下書き・候補・不一致検知を提示するのみで、"
-        "職員が確認・修正したうえで保存する運用を前提としています。"
+    st.markdown(
+        '<div class="hero-card">'
+        '<span class="hero-eyebrow">CARE COMPLIANCE COPILOT</span>'
+        '<div class="hero-title">訪問介護事業所の運営指導前チェックを支援するAI活用MVP</div>'
+        '<div class="hero-subtitle">'
+        "書類不備・未確認・未承認・期限切れ・記録不一致を検出し、必要に応じてAI下書き候補を提示します。"
+        "最終確認・保存は必ず職員が行います。"
+        "</div>"
+        '<div class="hero-point-row">'
+        '<span class="hero-point">📋 4分野15書類・記録を横断チェック</span>'
+        '<span class="hero-point">🛡️ AIは確定せず、職員確認が必須</span>'
+        '<span class="hero-point">🧾 確認履歴・監査ログを保持</span>'
+        "</div>"
+        "</div>",
+        unsafe_allow_html=True,
     )
 
     st.subheader("主要導線（書類中心の業務フロー）")
@@ -2062,6 +2364,7 @@ if page == "使い方・業務フロー":
             for key in demo_state_keys:
                 del st.session_state[key]
 
+            st.session_state["scroll_to_top"] = True
             st.success("デモ状態をリセットしました。")
             st.rerun()
 
@@ -2110,27 +2413,35 @@ elif page == "概要ダッシュボード":
     col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
-        st.metric("総検知アラート数", total_alerts)
-        st.caption("これまでに検知された書類・記録・レ点チェックのアラート行数（確認済みになっても減りません）")
+        render_kpi_card(
+            "累計", "kpi-flag-info", total_alerts, "総検知アラート数",
+            "これまでに検知された書類・記録・レ点チェックのアラート行数（確認済みになっても減りません）",
+        )
 
     with col2:
-        st.metric("未対応書類・記録件数", unresolved_document_count)
-        st.caption("未対応アラートが1件でも残っている書類・記録の数（同じ書類・記録の複数アラートは1件で集計）")
+        render_kpi_card(
+            "要対応", "kpi-flag-warn", unresolved_document_count, "未対応書類・記録件数",
+            "未対応アラートが1件でも残っている書類・記録の数（同じ書類・記録の複数アラートは1件で集計）",
+        )
 
     with col3:
-        st.metric("高リスク未対応書類・記録件数", high_risk_document_count)
-        st.caption(
+        render_kpi_card(
+            "優先確認", "kpi-flag-risk", high_risk_document_count, "高リスク未対応書類・記録件数",
             "未提出・未作成、未承認、AI下書き未確認、計画書・記録の不一致/未入力候補、"
-            "署名・確認漏れのいずれかを含む未対応書類・記録の数です。"
+            "署名・確認漏れのいずれかを含む未対応書類・記録の数です。",
         )
 
     with col4:
-        st.metric("確認済み書類・記録件数", confirmed_document_count)
-        st.caption("検知されたアラートがすべて職員確認済みになった書類・記録の数")
+        render_kpi_card(
+            "完了", "kpi-flag-ok", confirmed_document_count, "確認済み書類・記録件数",
+            "検知されたアラートがすべて職員確認済みになった書類・記録の数",
+        )
 
     with col5:
-        st.metric("対象利用者・職員・事業所数", affected_subjects)
-        st.caption("未対応アラートの対象数")
+        render_kpi_card(
+            "対象", "kpi-flag-info", affected_subjects, "対象利用者・職員・事業所数",
+            "未対応アラートの対象数",
+        )
 
     if high_risk_document_count > 0:
         st.write("**高リスク未対応書類・記録件数の内訳（分野別）**")
@@ -2216,13 +2527,21 @@ elif page == "書類アラート一覧":
             demo_row = demo_rows.iloc[0]
             with st.container(border=True):
                 st.markdown(
-                    "**★ デモ用：サービス提供記録AI補填体験**\n\n"
-                    f"{demo_row['user_key']} ／ サービス提供記録\n\n"
-                    "アラート：レ点未入力候補＋特記事項不足＋サービス区分との不一致候補\n\n"
-                    f"重要度：{demo_row['severity']}"
+                    '<span class="demo-card-badge">DEMO</span>'
+                    '<div class="demo-card-title">サービス提供記録 AI補填体験</div>'
+                    f'<div class="demo-card-meta">{demo_row["user_key"]} ／ サービス提供記録</div>'
+                    '<div class="demo-card-meta">アラート：レ点未入力候補＋特記事項不足＋サービス区分との不一致候補</div>'
+                    f'<div class="demo-card-meta">重要度：{demo_row["severity"]}</div>'
+                    '<div class="demo-feature-row">'
+                    '<span class="demo-feature-chip">Before / Afterで体験</span>'
+                    '<span class="demo-feature-chip">不足レ点・不一致候補を確認</span>'
+                    '<span class="demo-feature-chip">特記事項AI下書き候補を確認</span>'
+                    '<span class="demo-feature-chip">職員確認・監査ログまで確認</span>'
+                    "</div>",
+                    unsafe_allow_html=True,
                 )
                 st.caption("この行は、レ点チェックと特記事項AI補填の流れを確認するためのデモ用サンプルです。")
-                if st.button("▶ この書類の全体図を確認する", type="primary", key="demo_row_button"):
+                if st.button("▶ R011のBefore/Afterデモを開く", type="primary", key="demo_row_button"):
                     go_to_detail("daily_record", DEMO_RECORD_ID, DEMO_RECORD_USER)
             st.divider()
 
@@ -2235,7 +2554,10 @@ elif page == "書類アラート一覧":
                 high_risk_in_group = int(group["alert_type"].apply(classify_high_risk_bucket).notna().sum())
                 with st.container(border=True):
                     st.markdown(f"**{group.iloc[0]['subject_label']}**")
-                    st.write(f"未対応：{len(group)}件　高リスク未対応：{high_risk_in_group}件")
+                    badge_html = status_badge_html("未対応") + f" {len(group)}件"
+                    if high_risk_in_group > 0:
+                        badge_html += "&nbsp;&nbsp;" + status_badge_html("高リスク") + f" {high_risk_in_group}件"
+                    st.markdown(badge_html, unsafe_allow_html=True)
                     for _, row in group.head(3).iterrows():
                         st.write(f"- {row['document_name']}：{row['alert_type']}")
                     if st.button("この利用者の未対応を確認する", key=f"user_card_button_{user_key}"):
@@ -2428,9 +2750,14 @@ elif page == "書類詳細・AI補填プレビュー":
     if sel_source_type in ("daily_record", "checklist") and str(sel_target_id) == DEMO_RECORD_ID:
         st.title("サービス提供記録（デモ）")
         demo_saved = render_demo_service_record(related_rows)
-        if demo_saved:
+        # related_rowsは保存前の状態で取得済みのため、保存直後の同一実行ではconfirmed列が
+        # まだFalseのままになっている。demo_savedで同一実行分を、confirmed列で以降の再実行分
+        # （「次の未対応書類へ進む」等のボタン押下によるrerun）をそれぞれカバーする。
+        demo_is_confirmed = not related_rows.empty and bool(related_rows["confirmed"].all())
+        show_demo_after_buttons = demo_saved or (demo_is_confirmed and not st.session_state.get("demo_edit_mode"))
+        if show_demo_after_buttons:
             st.divider()
-            after_col1, after_col2 = st.columns(2)
+            after_col1, after_col2, after_col3 = st.columns(3)
             with after_col1:
                 if st.button("次の未対応書類へ進む", type="primary", key="demo_after_save_next"):
                     fresh_alert_df = build_document_alert_list()
@@ -2442,6 +2769,10 @@ elif page == "書類詳細・AI補填プレビュー":
                         request_navigation("確認履歴・監査ログ")
                         st.rerun()
             with after_col2:
+                if st.button("確認履歴・監査ログへ移動", key="demo_after_save_history"):
+                    request_navigation("確認履歴・監査ログ")
+                    st.rerun()
+            with after_col3:
                 if st.button("書類アラート一覧へ戻る", key="demo_after_save_back"):
                     request_navigation("書類アラート一覧")
                     st.rerun()
