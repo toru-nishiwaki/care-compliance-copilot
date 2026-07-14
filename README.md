@@ -1,5 +1,10 @@
 # **Care Compliance Copilot**
 
+## **デモアプリ**
+
+Streamlit Cloudで公開しています。  
+[▶ Care Compliance Copilot を開く](https://care-compliance-copilot-portfolio.streamlit.app)
+
 ## **概要**
 
 訪問介護事業所における運営指導前のコンプライアンス確認業務を支援する、AI活用MVPです。
